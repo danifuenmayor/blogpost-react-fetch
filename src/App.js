@@ -1,25 +1,133 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
 function App() {
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    getPosts('https://jsonplaceholder.typicode.com/posts');
+    return () => {
+      console.log('Hi');
+    }
+  }, [])
+
+  const getPosts = url => {
+    fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then(data => {
+        setPosts(data)
+        console.log(data);
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <div className="preloader">
+        <div className="rounder"></div>
+      </div>
+      <div id="main">
+        <div className="container">
+          <div className="row">
+            <div className="col-md-3">
+              <div className="about-fixed">
+                <div className="my-pic">
+                  <img src="images/pic/my-pic.png" alt="" />
+                  <a href="javascript:void(0)" className="collapsed" data-target="#menu" data-toggle="collapse"><i className="icon-menu menu"></i></a>
+                  <div id="menu" className="collapse">
+                    <ul className="menu-link">
+                      <li><a href="about.html">About</a></li>
+                      <li><a href="work.html">Work</a></li>
+                      <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                  </div>
+                </div>
+                <div className="my-detail">
+                  <div className="white-spacing">
+                    <h1>Alex Parker</h1>
+                    <span>Web Developer</span>
+                  </div>
+                  <ul className="social-icon">
+                    <li><a href="#" target="_blank" className="facebook"><i className="fa fa-facebook"></i></a></li>
+                    <li><a href="#" target="_blank" className="twitter"><i className="fa fa-twitter"></i></a></li>
+                    <li><a href="#" target="_blank" className="linkedin"><i className="fa fa-linkedin"></i></a></li>
+                    <li><a href="#" target="_blank" className="github"><i className="fa fa-github"></i></a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div className="col-md-9">
+              <div className="col-md-12 page-body">
+                <div className="row">
+                  <div className="sub-title">
+                    <h2>My Blog</h2>
+                    <a href="contact.html"><i className="icon-envelope"></i></a>
+                  </div>
+                  <div className="col-md-12 content-page">
+                    {
+                      posts.length > 0 &&
+                      posts.map((post, i) => {
+                        return (
+                          <div key={i} className="col-md-12 blog-post">
+                            <div className="post-image">
+                              <img src={"https://picsum.photos/id/" + Math.round(Math.random() * 1000) + "/810/326"} alt="" />
+                            </div>
+                            <div className="post-title">
+                              <a href="single.html"><h1>{post.title}</h1></a>
+                            </div>
+                            <div className="post-info">
+                              <span>November 23, 2016 / by <a href="#" target="_blank">Alex Parker</a></span>
+                            </div>
+                            <p>{post.body}</p>
+                            <a href="single.html" className="button button-style button-anim fa fa-long-arrow-right"><span>Read More</span></a>
+                          </div>
+                        )
+                      })
+                    }
+                    <div className="col-md-12 text-center">
+                      <a href="javascript:void(0)" id="load-more-post" className="load-more-button">{posts.length > 0 ? "Load" : "Loading..."}</a>
+                      <div id="post-end-message"></div>
+                    </div>
+                    <div className="col-md-8 col-md-offset-2">
+                      <form id="mc-form" method="post" action="http://uipasta.us14.list-manage.com/subscribe/post?u=854825d502cdc101233c08a21&amp;id=86e84d44b7">
+
+                        <div className="subscribe-form margin-top-20">
+                          <input id="mc-email" type="email" placeholder="Email Address" className="text-input" />
+                          <button className="submit-btn" type="submit">Submit</button>
+                        </div>
+                        <p>Subscribe to my weekly newsletter</p>
+                        <label for="mc-email" className="mc-label"></label>
+                      </form>
+                    </div>
+                  </div>
+                  <div className="col-md-12 page-body margin-top-50 footer">
+                    <footer>
+                      <ul className="menu-link">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="about.html">About</a></li>
+                        <li><a href="work.html">Work</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                      </ul>
+                      <p>© Copyright 2016 DevBlog. All rights reserved</p>
+                      <div className="uipasta-credit">Design By <a href="http://www.uipasta.com" target="_blank">UiPasta</a></div>
+                    </footer>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
   );
 }
 
